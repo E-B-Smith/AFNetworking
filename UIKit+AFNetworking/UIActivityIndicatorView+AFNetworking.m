@@ -35,9 +35,9 @@
 
 
 @interface AFAutoremoveNotificationObserver : NSObject
-	{
-	void* observingObject;	//	Use 'void*' rather than 'id' to avoid some compiler weirdness.
-	}
+    {
+    void* observingObject;  //  Use 'void*' rather than 'id' to avoid some compiler weirdness.
+    }
 + (void) observer:(id)object;
 + (void) cancelAutoremoveForObserver:(id)observer;
 @end
@@ -46,33 +46,33 @@
 @implementation AFAutoremoveNotificationObserver
 
 - (void) dealloc
-	{
-	id object = (__bridge id)(self->observingObject);
-	if (object)
-		[[NSNotificationCenter defaultCenter] removeObserver:object];
-	else
-		NSLog(@"Warning: No observer to remove for %@.", NSStringFromClass(self.class));
-	}
+    {
+    id object = (__bridge id)(self->observingObject);
+    if (object)
+        [[NSNotificationCenter defaultCenter] removeObserver:object];
+    else
+        NSLog(@"Warning: No observer to remove for %@.", NSStringFromClass(self.class));
+    }
 
 + (void) observer:(id)object
-	{
-	const void* kKey = class_getName(self.class);
-	AFAutoremoveNotificationObserver *denotifier = objc_getAssociatedObject(object, kKey);
-	if (!object || denotifier) return;
-	denotifier = [[AFAutoremoveNotificationObserver alloc] init];
-	if (!denotifier) return;
-	denotifier->observingObject = (__bridge void *) object;
-	objc_setAssociatedObject(object, kKey, denotifier, OBJC_ASSOCIATION_RETAIN);
-	}
+    {
+    const void* kKey = class_getName(self.class);
+    AFAutoremoveNotificationObserver *denotifier = objc_getAssociatedObject(object, kKey);
+    if (!object || denotifier) return;
+    denotifier = [[AFAutoremoveNotificationObserver alloc] init];
+    if (!denotifier) return;
+    denotifier->observingObject = (__bridge void *) object;
+    objc_setAssociatedObject(object, kKey, denotifier, OBJC_ASSOCIATION_RETAIN);
+    }
 
 + (void) cancelAutoremoveForObserver:(id)object
-	{
-	const void* kKey = class_getName(self.class);
-	AFAutoremoveNotificationObserver *denotifier = objc_getAssociatedObject(object, kKey);
-	if (!denotifier) return;
-	denotifier->observingObject = nil;
-	objc_setAssociatedObject(object, kKey, nil, OBJC_ASSOCIATION_RETAIN);
-	}
+    {
+    const void* kKey = class_getName(self.class);
+    AFAutoremoveNotificationObserver *denotifier = objc_getAssociatedObject(object, kKey);
+    if (!denotifier) return;
+    denotifier->observingObject = nil;
+    objc_setAssociatedObject(object, kKey, nil, OBJC_ASSOCIATION_RETAIN);
+    }
 
 @end
 
@@ -101,7 +101,7 @@
             [notificationCenter addObserver:self selector:@selector(af_startAnimating) name:AFNetworkingTaskDidResumeNotification object:task];
             [notificationCenter addObserver:self selector:@selector(af_stopAnimating) name:AFNetworkingTaskDidCompleteNotification object:task];
             [notificationCenter addObserver:self selector:@selector(af_stopAnimating) name:AFNetworkingTaskDidSuspendNotification object:task];
-			[AFAutoremoveNotificationObserver observer:self];
+            [AFAutoremoveNotificationObserver observer:self];
         }
     }
 }
@@ -125,7 +125,7 @@
 
             [notificationCenter addObserver:self selector:@selector(af_startAnimating) name:AFNetworkingOperationDidStartNotification object:operation];
             [notificationCenter addObserver:self selector:@selector(af_stopAnimating) name:AFNetworkingOperationDidFinishNotification object:operation];
-			[AFAutoremoveNotificationObserver observer:self];
+            [AFAutoremoveNotificationObserver observer:self];
         }
     }
 }
